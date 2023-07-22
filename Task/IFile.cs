@@ -5,7 +5,9 @@ namespace TestTask.Task
         
         
         void MakeANewPathOfFile(string path);
-        
-        void MakeANewTitleOfFile(string title);
+
+        void MakeANewNameOfFile(string name);
+
+        void FindAPathWithoutNameOfFileAndNameOfFile();
     }
 }

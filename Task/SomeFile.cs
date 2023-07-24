@@ -1,63 +1,21 @@
+using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TestTask.Task
 {
     
-    public class SomeFile : IFile,IOriginalFile,IReverseFile
+    public class SomeFile : IFile
     {
-       
-        public SomeFile(string path)
+        public async Task<byte[]> ReadFileInBytes(string Path)
         {
-            CheckForFileExtension(@path);
-            Path = @path;
-            FindAPathWithoutNameOfFileAndNameOfFile();
-        }
-        
-       
-        public string Path { get; private set; }
-        
-        public string PathWithoutNameOfFile { get; private set; }
-        
-        public string NameOfFile { get; private set; }
-        
-        
-        
-        public void MakeANewPathOfFile(string path)
-        {
-            PathWithoutNameOfFile = path;
-        }
-        
-        
-        public void MakeANewNameOfFile(string name)
-        {
-            CheckForFileExtension(name);
-
-            NameOfFile = name;
-
-        }
-
-        public void FindAPathWithoutNameOfFileAndNameOfFile()
-        {
-            for (int i = Path.Length - 1; i >= 0; i--)
-            {
-                if (Path[i] == '\\')
-                {
-                    string pathWithoutName = Path.Substring(0, i);
-                    PathWithoutNameOfFile = pathWithoutName;
-                    string nameOfFile = Path.Substring(i + 1, Path.Length - 1);
-                    NameOfFile = nameOfFile;
-                }
-            }
-        }
-
-
-        public byte[] ReadFileInBytes()
-        {
+            CheckForFileExtension(Path);
             using (FileStream fstream = new FileStream(Path, FileMode.Open)) 
             {
                 byte[] buffer = new byte[fstream.Length]; 
-                /*await не хочет здесь работать в main добавить Wait*/ fstream.ReadAsync(buffer, 0, buffer.Length);
+                await fstream.ReadAsync(buffer, 0, buffer.Length);
+                Console.WriteLine("Байты с файла считаны");
                 return buffer;
             }
             
@@ -67,13 +25,18 @@ namespace TestTask.Task
         {
             if (!path.EndsWith(".dat"))
             {
-                
+                throw new Exception();
             }
         }
+        
 
-        public void UpdateBytesInFile(byte[] subsequence)
+        public async void MakeOrUpdateBytesInFile(byte[] subsequence, string Path)
         {
-            throw new System.NotImplementedException();
+            using (FileStream fstream = new FileStream(Path, FileMode.OpenOrCreate)) 
+            {
+                await fstream.WriteAsync(subsequence, 0, subsequence.Length);
+                Console.WriteLine("Текст записан в файл");
+            }
         }
     }
 }

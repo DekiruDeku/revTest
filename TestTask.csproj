@@ -44,8 +44,6 @@
     <Compile Include="Task\IFile.cs" />
     <Compile Include="Task\SomeFile.cs" />
     <Compile Include="TestTask.Console\Program.cs" />
-    <Compile Include="Task\IOriginalFile.cs" />
-    <Compile Include="Task\IReverseFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Task\Exception" />

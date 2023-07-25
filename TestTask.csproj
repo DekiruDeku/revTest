@@ -41,14 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Task\Exception\FileExtensionException.cs" />
     <Compile Include="Task\IFile.cs" />
     <Compile Include="Task\SomeFile.cs" />
     <Compile Include="TestTask.Console\Program.cs" />
-    <Compile Include="Task\IOriginalFile.cs" />
-    <Compile Include="Task\IReverseFile.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Task\Exception" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

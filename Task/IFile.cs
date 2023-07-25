@@ -1,13 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace TestTask.Task
 {
     public interface IFile
     {
+        Task<Stack<byte>> ReadFileInBytes(string Path);
         
-        
-        void MakeANewPathOfFile(string path);
-
-        void MakeANewNameOfFile(string name);
-
-        void FindAPathWithoutNameOfFileAndNameOfFile();
+        void MakeOrUpdateBytesInFile(Stack<byte> subsequence, string Path);
     }
 }

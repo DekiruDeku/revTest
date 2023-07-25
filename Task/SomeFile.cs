@@ -1,79 +1,69 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using TestTask.Task.Exception;
 
 namespace TestTask.Task
 {
     
-    public class SomeFile : IFile,IOriginalFile,IReverseFile
+    public class SomeFile : IFile
     {
-       
-        public SomeFile(string path)
+        public async Task<Stack<byte>> ReadFileInBytes(string Path)
         {
-            CheckForFileExtension(@path);
-            Path = @path;
-            FindAPathWithoutNameOfFileAndNameOfFile();
-        }
-        
-       
-        public string Path { get; private set; }
-        
-        public string PathWithoutNameOfFile { get; private set; }
-        
-        public string NameOfFile { get; private set; }
-        
-        
-        
-        public void MakeANewPathOfFile(string path)
-        {
-            PathWithoutNameOfFile = path;
-        }
-        
-        
-        public void MakeANewNameOfFile(string name)
-        {
-            CheckForFileExtension(name);
-
-            NameOfFile = name;
-
-        }
-
-        public void FindAPathWithoutNameOfFileAndNameOfFile()
-        {
-            for (int i = Path.Length - 1; i >= 0; i--)
+            Path = CheckForFileExtension(Path);
+            Stack<byte> bytesinFile = new Stack<byte>();
+            using (BinaryReader reader = new BinaryReader(File.Open(Path, FileMode.Open)))
             {
-                if (Path[i] == '\\')
+                while (reader.PeekChar() > -1)
                 {
-                    string pathWithoutName = Path.Substring(0, i);
-                    PathWithoutNameOfFile = pathWithoutName;
-                    string nameOfFile = Path.Substring(i + 1, Path.Length - 1);
-                    NameOfFile = nameOfFile;
+                    bytesinFile.Push(reader.ReadByte());
+                }
+            }
+            return bytesinFile;
+        }
+
+        
+
+        public void MakeOrUpdateBytesInFile(Stack<byte> subsequence, string Path)
+        {
+            if (!Path.EndsWith(".dat"))
+            {
+                Path.Substring(0, Path.Length - 5);
+                Path += ".dat";
+            }
+            using (BinaryWriter writer = new BinaryWriter(File.Open(Path, FileMode.OpenOrCreate)))
+            {
+                foreach (var bytes in subsequence)
+                {
+                    writer.Write(bytes);
+                }
+                Console.WriteLine("Текст записан в файл");
+            }
+        }
+
+        public void CheckForRightName(ref string inputname)
+        {
+            if (inputname.Contains(@"\"))
+            {
+                while (inputname.Contains(@"\"))
+                {
+                    Console.WriteLine("Вы пытаетесь ввести путь, а не имя файла,попробуйте еще раз:");
+                    inputname = System.Console.ReadLine();
                 }
             }
         }
-
-
-        public byte[] ReadFileInBytes()
-        {
-            using (FileStream fstream = new FileStream(Path, FileMode.Open)) 
-            {
-                byte[] buffer = new byte[fstream.Length]; 
-                /*await не хочет здесь работать в main добавить Wait*/ fstream.ReadAsync(buffer, 0, buffer.Length);
-                return buffer;
-            }
-            
-        }
-
-        public void CheckForFileExtension(string path)
+        
+        private string CheckForFileExtension(string path)
         {
             if (!path.EndsWith(".dat"))
             {
-                
+                var Extansion = new FileExtensionException(path);
+                return Extansion.FinalPath;
             }
-        }
 
-        public void UpdateBytesInFile(byte[] subsequence)
-        {
-            throw new System.NotImplementedException();
+            return path;
         }
     }
 }
